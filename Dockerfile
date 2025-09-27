@@ -1,13 +1,22 @@
-FROM nikolaik/python-nodejs:python3.10-nodejs19
+# Latest Python slim image use karo
+FROM python:3.11-slim
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends ffmpeg aria2 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# System dependencies install karo
+RUN apt-get update --fix-missing && \
+    apt-get install -y --no-install-recommends \
+    ffmpeg aria2 && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-COPY . /app/
-WORKDIR /app/
-RUN python -m pip install --no-cache-dir --upgrade pip
-RUN pip3 install --no-cache-dir --upgrade --requirement requirements.txt
+# Work directory set karo
+WORKDIR /app
 
-CMD bash start
+# Python dependencies install
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy project files
+COPY . .
+
+# App run karne ka command (apne project ke hisaab se change karo)
+CMD ["python", "main.py"]
