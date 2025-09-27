@@ -1,13 +1,23 @@
 FROM nikolaik/python-nodejs:python3.10-nodejs19
 
-RUN apt-get clean
-rm -rf /var/lib/apt/lists/*
-apt-get update --fix-missing
-apt-get install -y ffmpeg aria2
+# Update, install packages, clean cache in one RUN to reduce layers & image size
+RUN apt-get update --fix-missing && \
+    apt-get install -y --no-install-recommends ffmpeg aria2 && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-COPY . /app/
+# Set working directory
 WORKDIR /app/
-RUN python -m pip install --no-cache-dir --upgrade pip
-RUN pip3 install --no-cache-dir --upgrade --requirement requirements.txt
 
-CMD bash start
+# Copy only requirements first for better caching
+COPY requirements.txt .
+
+# Upgrade pip and install dependencies
+RUN python -m pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir --upgrade -r requirements.txt
+
+# Copy the rest of the app
+COPY . .
+
+# Start command
+CMD ["bash", "start"]
