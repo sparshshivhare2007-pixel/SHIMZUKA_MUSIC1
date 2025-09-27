@@ -1,10 +1,10 @@
 # Latest Python slim image use karo
 FROM python:3.11-slim
 
-# System dependencies install karo
+# System dependencies install karo (git add kar diya)
 RUN apt-get update --fix-missing && \
     apt-get install -y --no-install-recommends \
-    ffmpeg aria2 && \
+    ffmpeg aria2 git && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
