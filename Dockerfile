@@ -19,4 +19,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # App run karne ka command (apne project ke hisaab se change karo)
-CMD ["python", "main.py"]
+CMD ["python", "config.py"]
